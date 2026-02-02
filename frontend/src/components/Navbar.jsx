@@ -6,7 +6,7 @@ const Navbar = () => {
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
-      <h1 className="text-3xl font-bold">ShopHere</h1>
+      <Link to="/"><h1 className="text-3xl font-bold">ShopHere</h1></Link>
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
         <NavLink to="/" className="flex flex-col items-center gap-1">
           <p>HOME</p>
@@ -82,7 +82,7 @@ const Navbar = () => {
             />
           </svg>
 
-          <p className="absolute right-[-5px] top-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+          <p className="absolute -right-1.25 -top-1.25 w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
             10
           </p>
         </Link>
