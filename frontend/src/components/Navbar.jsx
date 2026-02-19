@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const {setShowSearch} = useContext(ShopContext)
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
@@ -27,7 +29,7 @@ const Navbar = () => {
       </ul>
 
       <div className="flex items-center gap-3 sm:gap-6">
-        <svg
+        <svg onClick={()=>setShowSearch(prev=>!prev)}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

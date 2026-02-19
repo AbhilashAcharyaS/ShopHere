@@ -4,7 +4,7 @@ import ProductItem from '../components/ProductItem';
 import { ShopContext } from '../context/ShopContext';
 
 const Collection = () => {
-  const { currency } = useContext(ShopContext);
+  const { currency, search, showSearch } = useContext(ShopContext);
   const products=[{
       id: 1,
       title: "Essence Mascara Lash Princess",
@@ -327,6 +327,11 @@ const Collection = () => {
 
   const applyFilter=()=>{
     let productsCopy= products.slice();
+
+    if(showSearch && search){
+      // productsCopy=productsCopy.filter(item=>item.name.toLowerCase().includes(search.toLowerCase()))
+      productsCopy=productsCopy.filter(item=>item.title.toLowerCase().includes(search.toLowerCase()))
+    }
     if(category.length>0){
       productsCopy=productsCopy.filter(item=>category.includes(item.category));
     }
@@ -360,7 +365,7 @@ const Collection = () => {
 
   useEffect(()=>{
     applyFilter();
-  },[category,subCategory])
+  },[category,subCategory,search, showSearch])
 
   useEffect(()=>{
     sortProducts();
@@ -425,7 +430,7 @@ const Collection = () => {
           <ProductItem
             key={index}
             id={item.id}
-            name={item.name}
+            name={item.title}
             images={item.images}
             price={item.price}
           />
