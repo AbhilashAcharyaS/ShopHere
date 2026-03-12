@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 import ProductItem from '../components/ProductItem';
+import RelatedProducts from '../components/RelatedProducts';
 
 const Product = () => {
   const {productId}=useParams();
@@ -105,10 +106,12 @@ const Product = () => {
               <p> <b>{item.reviewerName}</b> : <i>({item.rating}/5)</i> {item.comment}</p>
             ))
           } */}
-          <p></p>
+          <p>An e-commerce app is a mobile or web-based application designed for buying and selling goods, services, or digital products over the internet. It serves as a digital storefront, allowing users to browse catalogs, add items to a shopping cart, and securely complete purchases via payment gateways.</p>
           <p></p>
         </div>
       </div>
+      {/* Related products */}
+      <RelatedProducts category={productData.category} subCategory={productData.subCategory}/>
     </div>
   )
 }
