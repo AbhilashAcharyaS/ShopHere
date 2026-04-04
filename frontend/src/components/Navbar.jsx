@@ -4,11 +4,13 @@ import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
-  const {setShowSearch, getCartCount} = useContext(ShopContext)
+  const { setShowSearch, getCartCount } = useContext(ShopContext);
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
-      <Link to="/"><h1 className="text-3xl font-bold">ShopHere</h1></Link>
+      <Link to="/">
+        <h1 className="text-3xl font-bold">ShopHere</h1>
+      </Link>
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
         <NavLink to="/" className="flex flex-col items-center gap-1">
           <p>HOME</p>
@@ -29,7 +31,8 @@ const Navbar = () => {
       </ul>
 
       <div className="flex items-center gap-3 sm:gap-6">
-        <svg onClick={()=>setShowSearch(prev=>!prev)}
+        <svg
+          onClick={() => setShowSearch((prev) => !prev)}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -45,20 +48,22 @@ const Navbar = () => {
         </svg>
 
         <div className="group relative">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6 cursor-pointer hover:scale-110"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-            />
-          </svg>
+          <Link to='/login'>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 cursor-pointer hover:scale-110"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+              />
+            </svg>
+          </Link>
 
           <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
             <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded-xl">
@@ -131,10 +136,34 @@ const Navbar = () => {
 
             <p>Back</p>
           </div>
-          <NavLink className="py-2 pl-6 border" onClick={()=>setVisible(false)} to="/">HOME</NavLink>
-          <NavLink className="py-2 pl-6 border" onClick={()=>setVisible(false)} to="/collection">COLLECTIONS</NavLink>
-          <NavLink className="py-2 pl-6 border" onClick={()=>setVisible(false)} to="/about">ABOUT</NavLink>
-          <NavLink className="py-2 pl-6 border" onClick={()=>setVisible(false)} to="/contact">CONTACT</NavLink>
+          <NavLink
+            className="py-2 pl-6 border"
+            onClick={() => setVisible(false)}
+            to="/"
+          >
+            HOME
+          </NavLink>
+          <NavLink
+            className="py-2 pl-6 border"
+            onClick={() => setVisible(false)}
+            to="/collection"
+          >
+            COLLECTIONS
+          </NavLink>
+          <NavLink
+            className="py-2 pl-6 border"
+            onClick={() => setVisible(false)}
+            to="/about"
+          >
+            ABOUT
+          </NavLink>
+          <NavLink
+            className="py-2 pl-6 border"
+            onClick={() => setVisible(false)}
+            to="/contact"
+          >
+            CONTACT
+          </NavLink>
         </div>
       </div>
     </div>
