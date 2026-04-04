@@ -22,7 +22,7 @@ const Login = () => {
 
       </div>
 
-      <button className='bg-black text-white font-light px-8 py-2 mt-4 rounded-md hover:scale-105 cursor-pointer'>{currentState==='Login'?'Sign In':'Sign Up'} </button>
+      <button className='bg-black text-white font-light px-8 py-2 mt-4 rounded-md hover:scale-105 cursor-pointer transition ease-in-out'>{currentState==='Login'?'Sign In':'Sign Up'} </button>
 
     </form>
   )
