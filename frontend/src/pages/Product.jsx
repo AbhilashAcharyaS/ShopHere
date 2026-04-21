@@ -12,11 +12,10 @@ const Product = () => {
   const [size,setSize]=useState('');
 
   const fetchProduct= async()=>{ 
-  //  console.log(productId);
    products.map((item)=>{
-    if(item.id==productId){
+    if(item._id==productId){
       setProductData(item);
-      setImage(item.images[0])
+      setImage(item.image[0])
       // console.log(item);
       return null;
     }
@@ -39,7 +38,7 @@ const Product = () => {
         <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
           <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full'>
             {
-              productData.images.map((item,index)=>(
+              productData.image.map((item,index)=>(
                 <img onClick={()=>setImage(item)} src={item} key={index} alt="product" className='w-[24%] sm:w-full sm:mb-3 shrink-0 cursor-pointer' />
               ))
             }
@@ -84,7 +83,7 @@ const Product = () => {
                 }
               </div>
           </div>
-          <button onClick={()=>addToCart(productData.id , size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button onClick={()=>addToCart(productData._id , size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5'/>
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
             <p>100% original product</p>

@@ -19,7 +19,7 @@ const Orders = () => {
             <div className="flex items-start gap-6 text-sm">
               <img
                 className="w-16 sm:w-20"
-                src={item.images[0]}
+                src={item.image[0]}
                 alt="product"
               />
               <div>
@@ -33,7 +33,7 @@ const Orders = () => {
                   <p>Size : M</p>
                 </div>
                 <p className="mt-2">
-                  Date: <span className="text-gray-400">16,June, 2026</span>
+                  Date: <span className="text-gray-400">{new Date().toDateString()}</span>
                 </p>
               </div>
             </div>

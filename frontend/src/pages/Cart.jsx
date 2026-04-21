@@ -32,8 +32,9 @@ const Cart = () => {
       <div>
         {cartData.map((item, index) => {
           const productData = products.find(
-            (product) => product.id == item._id,
+            (product) => product._id == item._id,
           );
+          
           return (
             <div
               key={index}
@@ -42,20 +43,20 @@ const Cart = () => {
               <div className="flex items-start gap-6">
                 <img
                   className="w-16 sm:w-20 "
-                  src={productData.images[0]}
+                  src={productData?.image[0]}
                   alt="cart product image"
                 />
                 <div>
                   <p className="text-sm sm:text-lg font-medium">
-                    {productData.name}{" "}
+                    {productData?.name}{" "}
                   </p>
                   <div className="flex items-center gap-5 mt-2">
                     <p>
                       {currency}
-                      {productData.price}
+                      {productData?.price}
                     </p>
                     <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">
-                      {item.size}
+                      {item?.size}
                     </p>
                   </div>
                 </div>
@@ -65,19 +66,19 @@ const Cart = () => {
                   e.target.value == "" || e.target.value == "0"
                     ? null
                     : updateQuantity(
-                        item._id,
-                        item.size,
+                        item?._id,
+                        item?.size,
                         Number(e.target.value),
                       )
                 }
                 className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
                 type="number"
                 min={1}
-                defaultValue={item.quantity}
+                defaultValue={item?.quantity}
               />
               {/* delete icon */}
               <svg
-                onClick={() => updateQuantity(item._id, item.size, 0)}
+                onClick={() => updateQuantity(item?._id, item?.size, 0)}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
