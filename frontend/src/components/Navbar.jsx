@@ -4,7 +4,14 @@ import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
-  const { setShowSearch, getCartCount } = useContext(ShopContext);
+  const { setShowSearch, getCartCount,token, setToken, navigate, setCartItems} = useContext(ShopContext);
+
+  const logout=()=>{
+    navigate("/login")
+    localStorage.removeItem("token");
+    setToken("")
+    setCartItems({})
+  }
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
@@ -48,8 +55,8 @@ const Navbar = () => {
         </svg>
 
         <div className="group relative">
-          <Link to='/login'>
-            <svg
+          
+            <svg onClick={()=>token ? null :navigate("/login")}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -63,15 +70,15 @@ const Navbar = () => {
                 d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
               />
             </svg>
-          </Link>
+          
 
-          <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+          { token && <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
             <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded-xl">
               <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p className="cursor-pointer hover:text-black">Orders</p>
-              <p className="cursor-pointer hover:text-black">Logout</p>
+              <p onClick={()=>navigate("/orders")} className="cursor-pointer hover:text-black">Orders</p>
+              <p onClick={()=>logout()} className="cursor-pointer hover:text-black">Logout</p>
             </div>
-          </div>
+          </div>}
         </div>
         <Link to="/cart" className="relative ">
           <svg
