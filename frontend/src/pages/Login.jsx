@@ -21,7 +21,7 @@ const Login = () => {
         });
         if (res.data.success) {
           setToken(res.data.token);
-          localStorage.setItem("Token", res.data.token);
+          localStorage.setItem("token", res.data.token);
           toast.success("Signed Up!");
         } else {
           toast.error(res.data.message);
@@ -107,7 +107,7 @@ const Login = () => {
         )}
       </div>
 
-      <button className="bg-black text-white font-light px-8 py-2 mt-4 rounded-md hover:scale-105 cursor-pointer transition ease-in-out">
+      <button type="submit" className="bg-black text-white font-light px-8 py-2 mt-4 rounded-md hover:scale-105 cursor-pointer transition ease-in-out">
         {currentState === "Login" ? "Sign In" : "Sign Up"}{" "}
       </button>
     </form>
