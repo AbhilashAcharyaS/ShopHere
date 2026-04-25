@@ -56,31 +56,31 @@ const PlaceOrder = () => {
       }
 
       else if(method=='stripe'){
-        const response= await axios.post(backendUrl+"/api/order/stripe", orderData, {headers: {token}})
-          console.log(response);
+        // const response= await axios.post(backendUrl+"/api/order/stripe", orderData, {headers: {token}})
+        //   console.log(response);
           
-          if(response.data.success){
-            navigate("/orders")
-            toast.success("Order placed!")
-            setCartItems({})
-          }
-          else{
-            toast.error(response.data.message)
-          }
+        //   if(response.data.success){
+        //     navigate("/orders")
+        //     toast.success("Order placed!")
+        //     setCartItems({})
+        //   }
+        //   else{
+        //     toast.error(response.data.message)
+        //   }
       }
 
       else {
-        const response= await axios.post(backendUrl+"/api/order/razorpay", orderData, {headers: {token}})
-          console.log(response);
+        // const response= await axios.post(backendUrl+"/api/order/razorpay", orderData, {headers: {token}})
+        //   console.log(response);
           
-          if(response.data.success){
-            navigate("/orders")
-            toast.success("Order placed!")
-            setCartItems({})
-          }
-          else{
-            toast.error(response.data.message)
-          }
+        //   if(response.data.success){
+        //     navigate("/orders")
+        //     toast.success("Order placed!")
+        //     setCartItems({})
+        //   }
+        //   else{
+        //     toast.error(response.data.message)
+        //   }
       }
       
     } catch (error) {
