@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const { products, currency, cartItems, updateQuantity, navigate } =
@@ -25,6 +26,17 @@ const Cart = () => {
       setCartData(tempData);
     }
   }, [cartItems, products]);
+
+  const checkout=()=>{
+    console.log(cartItems);
+    
+    if(Object.keys(cartItems).length==0){
+      toast.error("Cart is empty")
+    }
+    else{
+      navigate("/place-order")
+    }
+  }
 
   return (
     <div className="border-t pt-14">
@@ -104,7 +116,7 @@ const Cart = () => {
           <CartTotal />
           <div className="w-full text-end">
             <button
-              onClick={() => navigate("/place-order")}
+              onClick={() => checkout()}
               className="bg-black text-white text-sm my-8 px-8 py-3 hover:scale-105 cursor-pointer"
             >
               Proceed to Checkout

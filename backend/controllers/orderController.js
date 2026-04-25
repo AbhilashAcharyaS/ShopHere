@@ -22,10 +22,42 @@ const placeOrder=async (req,res)=>{
     }
 }
 const placeOrderStripe=async (req,res)=>{
+    // try {
+    //     const {userId, items, amount, address} = req.body;
+    //     const orderData= {
+    //         userId, items, amount,address, paymentMethod:"Stripe", payment:false, date:Date.now()
+    //     }
 
+    //     const newOrder = new orderModel(orderData)
+    //     await newOrder.save()
+
+    //     await userModel.findByIdAndUpdate(userId,{})
+
+    //     res.json({success:true, message:"Order Placed!"})
+        
+    // } catch (error) {
+    //     console.log(error);
+    //     res.json({ success: false, message: error.message });
+    // }
 }
 const placeOrderRazorPay=async (req,res)=>{
+    // try {
+    //     const {userId, items, amount, address} = req.body;
+    //     const orderData= {
+    //         userId, items, amount,address, paymentMethod:"Razorpay", payment:false, date:Date.now()
+    //     }
 
+    //     const newOrder = new orderModel(orderData)
+    //     await newOrder.save()
+
+    //     await userModel.findByIdAndUpdate(userId,{})
+
+    //     res.json({success:true, message:"Order Placed!"})
+        
+    // } catch (error) {
+    //     console.log(error);
+    //     res.json({ success: false, message: error.message });
+    // }
 }
 const allOrders=async (req,res)=>{
 

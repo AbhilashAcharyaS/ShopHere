@@ -157,6 +157,7 @@ const ShopContextProvider = (props) => {
     token,
     setToken,
     backendUrl,
+    cartItems, setCartItems
   };
 
   return (
