@@ -56,17 +56,16 @@ const PlaceOrder = () => {
       }
 
       else if(method=='stripe'){
-        // const response= await axios.post(backendUrl+"/api/order/stripe", orderData, {headers: {token}})
-        //   console.log(response);
+        const res= await axios.post(backendUrl+"/api/order/stripe", orderData, {headers: {token}})
+          console.log(res);
           
-        //   if(response.data.success){
-        //     navigate("/orders")
-        //     toast.success("Order placed!")
-        //     setCartItems({})
-        //   }
-        //   else{
-        //     toast.error(response.data.message)
-        //   }
+          if(res.data.success){
+            const {session_url} = res.data;
+            window.location.replace(session_url)
+          }
+          else{
+            toast.error(res.data.message)
+          }
       }
 
       else {
