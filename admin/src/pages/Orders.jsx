@@ -16,7 +16,7 @@ const Orders = ({ token }) => {
       );
 
       if (res.data.success) {
-        setOrders(res.data.orders);
+        setOrders(res.data.orders.reverse());
       } else {
         toast.error(res.data.message);
       }
