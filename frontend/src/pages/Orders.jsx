@@ -15,7 +15,7 @@ const Orders = () => {
       }
 
       const res= await axios.post(backendUrl+"/api/order/userOrders", {}, {headers:{token}})
-      console.log(res.data.orders.reverse());
+      // console.log(res.data.orders.reverse());
       
       if(res.data.success){
         let allOrderItems=[];

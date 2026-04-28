@@ -28,7 +28,7 @@ const Cart = () => {
   }, [cartItems, products]);
 
   const checkout=()=>{
-    console.log(cartItems);
+    // console.log(cartItems);
     
     if(Object.keys(cartItems).length==0){
       toast.error("Cart is empty")
