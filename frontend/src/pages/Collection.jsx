@@ -35,7 +35,7 @@ const Collection = () => {
 
     if(showSearch && search){
       // productsCopy=productsCopy.filter(item=>item.name.toLowerCase().includes(search.toLowerCase()))
-      productsCopy=productsCopy.filter(item=>item.title.toLowerCase().includes(search.toLowerCase()))
+      productsCopy=productsCopy.filter(item=>item.name.toLowerCase().includes(search.toLowerCase()))
     }
     if(category.length>0){
       productsCopy=productsCopy.filter(item=>category.includes(item.category));
@@ -135,7 +135,7 @@ const Collection = () => {
           <ProductItem
             key={index}
             id={item._id}
-            name={item.title}
+            name={item.name}
             image={item.image}
             price={item.price}
           />

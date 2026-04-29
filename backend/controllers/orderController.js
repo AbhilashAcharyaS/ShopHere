@@ -5,7 +5,7 @@ import razorpay from "razorpay";
 
 //global variables
 const currency = "inr";
-const deliveryCharge = 10;
+const deliveryCharge = 40;
 
 //gateway initialization
 const stripe = new Stripe(process.env.STRIPE_API_KEY);

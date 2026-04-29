@@ -49,8 +49,9 @@ const Product = () => {
         </div>
         {/* product info */}
         <div className="flex-1">
-          <h1 className='font-medium text-2xl mt-2 '>{productData.title}</h1>
+          <h1 className='font-medium text-2xl mt-2 '>{productData.name}</h1>
           <div className='flex items-center gap-1 mt-2'>
+            <p className=''>Rating:</p>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
   <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
             </svg>
@@ -69,21 +70,20 @@ const Product = () => {
             </svg>
 
 
-            <p className='pl-2'>Rating: {productData.rating}</p>
           </div>
           <p className='mt-5 text-3xl font-medium '>{currency+" "+productData.price }</p>
-          <p className='mt-5 text-gray-500 md:w-4/5 '>{productData.description }</p>
+          <p className='mt-5 text-gray-500 md:w-4/5 '>{productData.name }</p>
           <div className='flex flex-col gap-4 my-8'>
               <p>Select size</p>
               <div className="flex gap-2">
                 {
                   productData?.sizes?.map((item,index)=>(
-                    <button onClick={()=>setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item===size?'border-orange-500':""} `} key={index}>{item}</button>
+                    <button onClick={()=>setSize(item)} className={`border cursor-pointer py-2 px-4 bg-gray-100 ${item===size?'border-orange-500 border-2':""} `} key={index}>{item}</button>
                   ))
                 }
               </div>
           </div>
-          <button onClick={()=>addToCart(productData._id , size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button onClick={()=>addToCart(productData._id , size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700 cursor-pointer hover:scale-110 transition duration-300 ease-in-out'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5'/>
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
             <p>100% original product</p>
@@ -97,7 +97,7 @@ const Product = () => {
       <div className="mt-20">
         <div className="flex">
           <b className='border px-5 py-3 text-sm'>Description</b>
-          <p className='border px-5 py-3 text-sm'>Reviews ({productData?.reviews?.length})</p>
+          <p className='border px-5 py-3 text-sm'>Reviews</p>
         </div>
         <div className='flex flex-col gap-4 border p-6 text-sm text-gray-500'>
           {/* {
@@ -105,8 +105,9 @@ const Product = () => {
               <p> <b>{item.reviewerName}</b> : <i>({item.rating}/5)</i> {item.comment}</p>
             ))
           } */}
-          <p>An e-commerce app is a mobile or web-based application designed for buying and selling goods, services, or digital products over the internet. It serves as a digital storefront, allowing users to browse catalogs, add items to a shopping cart, and securely complete purchases via payment gateways.</p>
-          <p></p>
+          {/* <p>An e-commerce app is a mobile or web-based application designed for buying and selling goods, services, or digital products over the internet. It serves as a digital storefront, allowing users to browse catalogs, add items to a shopping cart, and securely complete purchases via payment gateways.</p> */}
+
+          <p>{productData.description}</p>
         </div>
       </div>
       {/* Related products */}
