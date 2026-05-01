@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import productModel from "../models/productModel.js"
+import productModel from "../models/productModel.js";
 
 const addProduct = async (req, res) => {
   try {
@@ -12,6 +12,7 @@ const addProduct = async (req, res) => {
       sizes,
       bestSeller,
     } = req.body;
+
     const image1 = req.files.image1 && req.files.image1[0];
     const image2 = req.files.image2 && req.files.image2[0];
     const image3 = req.files.image3 && req.files.image3[0];
@@ -42,48 +43,113 @@ const addProduct = async (req, res) => {
       date: Date.now(),
     };
 
-    console.log(productData);
+    // console.log(productData);
 
-    const product= new productModel(productData)
+    const product = new productModel(productData);
 
-    await product.save()
+    await product.save();
 
-    res.json({success:true, message:"Product added!"});
+    res.json({ success: true, message: "Product added!" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
-}
+  }
 };
 
 const listProducts = async (req, res) => {
-    try {
-        const products= await productModel.find({});
-        res.json({success:true, products})
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
+  try {
+    const products = await productModel.find({});
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
 };
 
 const removeProduct = async (req, res) => {
-    try {
-        await productModel.findByIdAndDelete(req.body.id)
-        res.json({success:true, message:"Product Removed!"})
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
+  try {
+    await productModel.findByIdAndDelete(req.body.id);
+    res.json({ success: true, message: "Product Removed!" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
 };
 
 const singleProduct = async (req, res) => {
-     try {
-        const {productId} = req.body
-        const product = await productModel.findById(productId)
-        res.json({success:true, product})
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
-    }
+  try {
+    const { productId } = req.body;
+    const product = await productModel.findById(productId);
+    res.json({ success: true, product });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
 };
 
-export { listProducts, addProduct, removeProduct, singleProduct };
+const editProduct = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const {
+      name,
+      description,
+      price,
+      category,
+      subCategory,
+      sizes,
+      bestSeller,
+      image1,
+      image2,
+      image3,
+      image4,
+    } = req.body;
+
+    const existingProduct = await productModel.findById(productId);
+
+    const updatedImages = [...existingProduct.image]; // clone old images
+
+    if (req.files?.image1) {
+      const result = await cloudinary.uploader.upload(req.files.image1[0].path);
+      updatedImages[0] = result.secure_url;
+    }
+
+    if (req.files?.image2) {
+      const result = await cloudinary.uploader.upload(req.files.image2[0].path);
+      updatedImages[1] = result.secure_url;
+    }
+
+    if (req.files?.image3) {
+      const result = await cloudinary.uploader.upload(req.files.image3[0].path);
+      updatedImages[2] = result.secure_url;
+    }
+
+    if (req.files?.image4) {
+      const result = await cloudinary.uploader.upload(req.files.image4[0].path);
+      updatedImages[3] = result.secure_url;
+    }
+
+    const productData = {
+      name,
+      description,
+      category,
+      subCategory,
+      sizes: JSON.parse(sizes),
+      price: Number(price),
+      bestSeller: bestSeller == "true" ? true : false,
+      image: updatedImages,
+      date: Date.now(),
+    };
+
+    const product = await productModel.findByIdAndUpdate(
+      productId,
+      productData,
+      { new: true },
+    );
+    res.json({ success: true, message: "Product updated!", product });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { listProducts, addProduct, removeProduct, singleProduct, editProduct };
