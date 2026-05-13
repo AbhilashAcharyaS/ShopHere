@@ -2,19 +2,86 @@ import axios from "axios";
 import React, { useState } from "react";
 import { backendURL } from "../App";
 import { toast } from "react-toastify";
-import {useNavigate, useParams} from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+
+import {
+  arrayMove,
+  SortableContext,
+  horizontalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+
+import { CSS } from "@dnd-kit/utilities";
+
+const SortableItem = ({ id, img, index, images, setImages }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const handleFileChange = (e) => {
+    const newImages = [...images];
+    newImages[index] = e.target.files[0];
+    setImages(newImages);
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="relative"
+    >
+      {/*  IMAGE (click to upload) */}
+      <div
+        onClick={() => document.getElementById(`file-${index}`).click()}
+        className="cursor-pointer"
+      >
+        <img
+          className="w-20 h-20 object-contain border rounded-xl"
+          src={
+            img instanceof File
+              ? URL.createObjectURL(img)
+              : img || "https://static.vecteezy.com/system/resources/previews/055/428/287/non_2x/image-upload-icon-with-arrow-and-photo-design-vector.jpg"
+          }
+          alt=""
+        />
+      </div>
+
+      {/*  HIDDEN INPUT */}
+      <input
+        id={`file-${index}`}
+        type="file"
+        hidden
+        onChange={handleFileChange}
+      />
+
+      {/*  DRAG HANDLE (IMPORTANT) */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute top-0 right-0 bg-black text-white text-xs px-1 cursor-grab"
+      >
+        ☰
+      </div>
+    </div>
+  );
+};
 
 const Edit = ({ token }) => {
+  const { productId } = useParams();
+  const navigate = useNavigate();
 
-    const {productId}= useParams();
-    const navigate= useNavigate()
-    // const [product,setProduct]= useState({})
-
-  const [image1, setImage1] = useState(false);
-  const [image2, setImage2] = useState(false);
-  const [image3, setImage3] = useState(false);
-  const [image4, setImage4] = useState(false);
+  const [images, setImages] = useState([null, null, null, null]);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -24,35 +91,33 @@ const Edit = ({ token }) => {
   const [bestSeller, setBestSeller] = useState(false);
   const [sizes, setSizes] = useState([]);
 
-  const getProductInfo=async()=>{
+  const getProductInfo = async () => {
     try {
-      const res = await axios.post(backendURL + "/api/product/single",{productId});
+      const res = await axios.post(backendURL + "/api/product/single", {
+        productId,
+      });
       if (res.data.success) {
-        // setProduct(res.data.product);  
         setName(res.data.product.name);
         setDescription(res.data.product.description);
-        res.data.product.image[0] && setImage1(res.data.product.image[0]);
-        res.data.product.image[1] && setImage2(res.data.product.image[1]);
-        res.data.product.image[2] && setImage3(res.data.product.image[2]);
-        res.data.product.image[3] && setImage4(res.data.product.image[3]);
-        setPrice(res.data.product.price); 
-        setCategory(res.data.product.category)    
-        setSubCategory(res.data.product.subCategory) 
-        setBestSeller(!!res.data.product.bestSeller)
-        setSizes(res.data.product.sizes)
+        setPrice(res.data.product.price);
+        setCategory(res.data.product.category);
+        setSubCategory(res.data.product.subCategory);
+        setBestSeller(!!res.data.product.bestSeller);
+        setSizes(res.data.product.sizes);
+
+        setImages(res.data.product.image || [null, null, null, null]);
       } else {
         toast.error("Error fetching data!");
       }
     } catch (error) {
       toast.error(error.message);
     }
-  }
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-
-      if(!price){
+      if (!price) {
         toast.error("Price is required");
         return;
       }
@@ -65,18 +130,14 @@ const Edit = ({ token }) => {
       formData.append("bestSeller", bestSeller);
       formData.append("sizes", JSON.stringify(sizes));
 
-      image1 && formData.append("image1", image1);
-      image2 && formData.append("image2", image2);
-      image3 && formData.append("image3", image3);
-      image4 && formData.append("image4", image4);
-
-//       for (let [key, value] of formData.entries()) {
-//     console.log(key,":", value);
-// }
-      
+      images.forEach((img, index) => {
+        if (img instanceof File) {
+          formData.append(`image${index + 1}`, img);
+        }
+      });
 
       const response = await axios.put(
-        backendURL + "/api/product/edit/"+productId,
+        backendURL + "/api/product/edit/" + productId,
         formData,
         { headers: { token } },
       );
@@ -84,12 +145,9 @@ const Edit = ({ token }) => {
         toast.success(response.data.message);
         setName("");
         setDescription("");
-        setImage1(false);
-        setImage2(false);
-        setImage3(false);
-        setImage4(false);
+        setImages([null, null, null, null])
         setPrice("");
-        navigate("/list")
+        navigate("/list");
       } else {
         toast.error(response.data.message);
       }
@@ -99,9 +157,30 @@ const Edit = ({ token }) => {
     }
   };
 
-  useEffect(()=>{
-    getProductInfo()
-  },[])
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = images.findIndex((_, i) => i.toString() === active.id);
+      const newIndex = images.findIndex((_, i) => i.toString() === over.id);
+
+      setImages((items) => arrayMove(items, oldIndex, newIndex));
+    }
+  };
+
+  useEffect(() => {
+    getProductInfo();
+  }, []);
+
+  useEffect(() => {
+  return () => {
+    images.forEach(img => {
+      if (img instanceof File) {
+        URL.revokeObjectURL(img);
+      }
+    });
+  };
+}, [images]);
 
   return (
     <form
@@ -110,77 +189,28 @@ const Edit = ({ token }) => {
     >
       <div>
         <p className="mb-2 ">Upload Image</p>
-        <div className="flex gap-1">
-          <label htmlFor="image1">
-            <img
-              className="w-20 m-2 border rounded-xl hover:scale-110 trasition duration-500 cursor-pointer mt-4"
-              src={
-                image1 instanceof File
-                  ? URL.createObjectURL(image1) : image1 || "https://static.vecteezy.com/system/resources/previews/055/428/287/non_2x/image-upload-icon-with-arrow-and-photo-design-vector.jpg"
-              }
-              alt="product image"
-            />
-            <input
-              onChange={(e) => setImage1(e.target.files[0])}
-              type="file"
-              hidden
-              id="image1"
-              name="image1"
-            />
-          </label>
-          <label htmlFor="image2">
-            <img
-              className="w-20 m-2 border rounded-xl hover:scale-110 trasition duration-500 cursor-pointer mt-4"
-              src={
-                image2 instanceof File
-                  ? URL.createObjectURL(image2) :image2 || "https://static.vecteezy.com/system/resources/previews/055/428/287/non_2x/image-upload-icon-with-arrow-and-photo-design-vector.jpg"
-              }
-              alt="product image"
-            />
-            <input
-              onChange={(e) => setImage2(e.target.files[0])}
-              type="file"
-              hidden
-              id="image2" name="image2"
-            />
-          </label>
-          <label htmlFor="image3">
-            <img
-              className="w-20 m-2 border rounded-xl hover:scale-110 trasition duration-500 cursor-pointer mt-4"
-              src={
-                image3 instanceof File
-                  ? URL.createObjectURL(image3): image3 || "https://static.vecteezy.com/system/resources/previews/055/428/287/non_2x/image-upload-icon-with-arrow-and-photo-design-vector.jpg"
-              
-              }
-              alt="product image"
-            />
-            <input
-              onChange={(e) => setImage3(e.target.files[0])}
-              type="file"
-              hidden
-              id="image3"
-              name="image3"
-            />
-          </label>
-          <label htmlFor="image4">
-            <img
-              className="w-20 m-2 border rounded-xl hover:scale-110 trasition duration-500 cursor-pointer mt-4"
-              src={
-                image4 instanceof File
-                  ? URL.createObjectURL(image4) : image4 || "https://static.vecteezy.com/system/resources/previews/055/428/287/non_2x/image-upload-icon-with-arrow-and-photo-design-vector.jpg"
-                  
-              }
-              alt="product image"
-            />
-            <input
-              onChange={(e) => setImage4(e.target.files[0])}
-              type="file"
-              hidden
-              id="image4"
-              name="image4"
-            />
-          </label>
-        </div>
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={images.map((_, i) => i.toString())}
+            strategy={horizontalListSortingStrategy}
+          >
+            <div className="flex gap-2">
+              {images.map((img, index) => (
+                <SortableItem
+                  key={index}
+                  id={index.toString()}
+                  img={img}
+                  index={index}
+                  images={images}
+                  setImages={setImages}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       </div>
       <div className="w-full">
         <p className="mb-2">Product name</p>
@@ -215,9 +245,9 @@ const Edit = ({ token }) => {
             className="w-full px-3 py-2"
             name="category"
           >
-            <option value="Men" >Men</option>
-            <option value="Women" >Women</option>
-            <option value="Kids" >Kids</option>
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Kids">Kids</option>
           </select>
         </div>
 
@@ -225,12 +255,13 @@ const Edit = ({ token }) => {
           <p className="mb-2">Product Sub-Category</p>
           <select
             onChange={(e) => setSubCategory(e.target.value)}
-            value={subCategory} name="subCategory"
+            value={subCategory}
+            name="subCategory"
             className="w-full px-3 py-2"
           >
-            <option value="Topwear" >Topwear</option>
-            <option value="Bottomwear" >Bottomwear</option>
-            <option value="Winterwear" >Winterwear</option>
+            <option value="Topwear">Topwear</option>
+            <option value="Bottomwear">Bottomwear</option>
+            <option value="Winterwear">Winterwear</option>
           </select>
         </div>
 
@@ -238,8 +269,11 @@ const Edit = ({ token }) => {
           <p className="mb-2">Product Price</p>
           <input
             value={price}
-            onChange={(e) =>{setPrice(e.target.value)}}
-            type="number" name="price"
+            onChange={(e) => {
+              setPrice(e.target.value);
+            }}
+            type="number"
+            name="price"
             className="w-full px-3 py-2 sm:w-30"
           />
         </div>
